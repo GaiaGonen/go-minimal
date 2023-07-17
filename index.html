@@ -1,0 +1,38 @@
+<html>
+    <body>
+        <div>
+            <h1>Ready to play?</h1>
+            <button onclick="bet()">Bet</button>
+            <button onclick="fold()">Fold</button>
+            <pre id="logs"></pre>
+        </div>
+    </body>
+    <style>
+        body {
+            text-align: center;
+        }
+        div {
+            padding: 1rem;
+        }
+    </style>
+    <script>
+        const logs = document.getElementById('logs')
+        const socket = new WebSocket("ws://localhost:8080/echo")
+
+        socket.onopen = function () {
+            logs.innerHTML += 'Sever started!'
+        }
+
+        socket.onmessage = function (message) {
+            logs.innerHTML += `<br>${message.data}`
+        }
+
+        function bet() {
+            socket.send('I\'m betting!')
+        }
+
+        function fold() {
+            socket.send('I\'m folding!')
+        }
+    </script>
+</html>
