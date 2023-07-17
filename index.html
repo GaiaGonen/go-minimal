@@ -1,38 +1,45 @@
-<html>
-    <body>
-        <div>
-            <h1>Ready to play?</h1>
-            <button onclick="bet()">Bet</button>
-            <button onclick="fold()">Fold</button>
-            <pre id="logs"></pre>
-        </div>
-    </body>
-    <style>
-        body {
-            text-align: center;
-        }
-        div {
-            padding: 1rem;
-        }
-    </style>
-    <script>
-        const logs = document.getElementById('logs')
-        const socket = new WebSocket("ws://localhost:8080/echo")
+<html lang="en">
+<div>
+    <h1>Go websockets TODO example</h1>
+    <p>Available commands for todo app</p>
+    <p>- add [task]</p>
+    <p>- done [task]</p>
+    <label for="input">Enter command:</label>
+    <input id="input" type="text" size="40" />
+    <button onclick="send()">Send</button>
+    <pre id="output"></pre>
+</div>
+<style>
+    html {
+        text-align: center;
+        font-size: 16px;
+    }
+    div {
+        padding: 1rem;
+    }
+    #input {
+        font-size: 16px;
+    }
+    p {
+        font-size: 16px;
+    }
+</style>
+<script>
+    var input = document.getElementById("input");
+    var output = document.getElementById("output");
+    var socket = new WebSocket("ws://localhost:8080/todo");
 
-        socket.onopen = function () {
-            logs.innerHTML += 'Sever started!'
-        }
+    socket.onopen = function () {
+        output.innerHTML += "Status: Connected\n";
+    };
 
-        socket.onmessage = function (message) {
-            logs.innerHTML += `<br>${message.data}`
-        }
+    socket.onmessage = function (e) {
+        output.innerHTML += "\nServer: " + e.data + "\n";
+    };
 
-        function bet() {
-            socket.send('I\'m betting!')
-        }
-
-        function fold() {
-            socket.send('I\'m folding!')
-        }
-    </script>
+    function send() {
+        socket.send(input.value);
+        input.value = "";
+    }
+</script>
 </html>
